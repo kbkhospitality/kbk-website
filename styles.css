@@ -1,15 +1,22 @@
 
+/* =========================================
+   KBK HOSPITALITY
+   Complete Stylesheet
+   Luxury Black • Gold • Ivory
+========================================= */
+
 :root {
   --black: #080808;
   --black-soft: #111111;
-  --panel: #151515;
+  --panel: #000000;
   --gold: #c9a45c;
   --gold-light: #e4ca8a;
   --ivory: #f4efe5;
   --muted: #c0b9ae;
-  --line: rgba(201,164,92,.3);
+  --line: rgba(201, 164, 92, .28);
   --serif: "Playfair Display", Georgia, serif;
   --sans: "DM Sans", Arial, sans-serif;
+  --ease: cubic-bezier(.2, .7, .2, 1);
 }
 
 * {
@@ -20,7 +27,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  scroll-padding-top: 100px;
   font-size: 16px;
 }
 
@@ -49,10 +56,11 @@ a {
 
 button {
   font: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button,
-a {
+a,
+button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -61,7 +69,14 @@ a {
   color: var(--black);
 }
 
-/* HEADER */
+:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 4px;
+}
+
+/* =========================================
+   HEADER & NAVIGATION
+========================================= */
 
 .header {
   min-height: 86px;
@@ -69,13 +84,18 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(0,0,0,.94);
+  background: rgba(0, 0, 0, 0.94);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(18px);
+  transition: background .35s ease, box-shadow .35s ease;
+}
+
+.header.is-scrolled {
+  background: rgba(0, 0, 0, 0.98);
 }
 
 .brand {
@@ -86,8 +106,8 @@ a {
 }
 
 .brand img {
-  width: 95px;
-  height: 80px;
+  width: 82px;
+  height: 72px;
   object-fit: contain;
 }
 
@@ -97,33 +117,53 @@ a {
 }
 
 .brand strong {
-  font-size: 19px;
+  font-size: 18px;
   letter-spacing: 2px;
   line-height: 1.4;
 }
 
 .brand small {
   color: var(--gold);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 2px;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2vw, 28px);
+  gap: clamp(12px, 1.8vw, 26px);
 }
 
 .nav a {
+  position: relative;
   color: #e0d9ce;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   transition: color .3s ease;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .35s ease;
 }
 
 .nav a:hover,
 .nav a:focus-visible {
   color: var(--gold-light);
+}
+
+.nav a:hover::after,
+.nav a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .nav .contact-link {
@@ -132,16 +172,18 @@ a {
 
 .menu-toggle {
   display: none;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--line);
   color: var(--gold);
   background: transparent;
-  width: 45px;
-  height: 45px;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 25px;
 }
 
-/* BUTTONS */
+/* =========================================
+   BUTTONS
+========================================= */
 
 .button {
   min-height: 52px;
@@ -154,12 +196,13 @@ a {
   font-weight: 600;
   letter-spacing: .2px;
   border: 1px solid transparent;
-  transition: background .3s, color .3s,
-    border-color .3s, transform .3s;
-}
-
-.button:hover {
-  transform: translateY(-2px);
+  cursor: pointer;
+  transition:
+    background .3s ease,
+    color .3s ease,
+    border-color .3s ease,
+    transform .35s var(--ease),
+    box-shadow .35s ease;
 }
 
 .gold-button {
@@ -171,17 +214,20 @@ a {
 .gold-button:hover {
   background: var(--gold-light);
   border-color: var(--gold-light);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(201, 164, 92, .18);
 }
 
 .outline-button {
   color: var(--ivory);
-  border-color: rgba(244,239,229,.4);
+  border-color: rgba(244, 239, 229, .4);
   background: transparent;
 }
 
 .outline-button:hover {
   color: var(--gold);
   border-color: var(--gold);
+  transform: translateY(-3px);
 }
 
 .text-link {
@@ -190,34 +236,38 @@ a {
   font-size: 16px;
   font-weight: 600;
   margin-top: 16px;
-  transition: color .3s, transform .3s;
+  transition: color .3s ease, transform .3s ease;
 }
 
 .text-link:hover {
   color: var(--gold-light);
-  transform: translateX(4px);
+  transform: translateX(5px);
 }
 
-/* HERO */
+/* =========================================
+   HERO
+========================================= */
 
 .hero {
   min-height: min(760px, 88vh);
+  min-height: min(760px, 88svh);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 100px 10% 135px;
   overflow: hidden;
+  isolation: isolate;
   background:
     radial-gradient(
-      ellipse at 75% 25%,
-      rgba(201,164,92,.11),
-      transparent 35%
+      ellipse at 78% 28%,
+      rgba(201, 164, 92, .14),
+      transparent 36%
     ),
     linear-gradient(
       120deg,
       #080808 10%,
-      #15120d 55%,
+      #17130d 55%,
       #080808 100%
     );
 }
@@ -225,26 +275,23 @@ a {
 .hero::before {
   content: "";
   position: absolute;
-  width: 480px;
-  height: 480px;
-  right: -180px;
+  width: 460px;
+  height: 460px;
+  right: -170px;
   top: 10%;
-  border: 1px solid rgba(201,164,92,.16);
+  border: 1px solid rgba(201, 164, 92, .2);
   border-radius: 50%;
   box-shadow:
-    0 0 0 45px rgba(201,164,92,.025),
-    0 0 0 90px rgba(201,164,92,.02);
+    0 0 0 45px rgba(201, 164, 92, .025),
+    0 0 0 90px rgba(201, 164, 92, .018);
   pointer-events: none;
+  animation: heroOrb 14s ease-in-out infinite alternate;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(8,8,8,.15),
-    transparent
-  );
+  background: linear-gradient(90deg, rgba(8, 8, 8, .2), transparent);
   pointer-events: none;
 }
 
@@ -252,7 +299,7 @@ a {
   max-width: 850px;
   position: relative;
   z-index: 1;
-  animation: heroEnter 1.1s cubic-bezier(.2,.7,.2,1) both;
+  animation: heroEnter 1.1s var(--ease) both;
 }
 
 .eyebrow,
@@ -306,6 +353,7 @@ h2 em {
   color: #c8bda8;
   font-size: 12px;
   letter-spacing: 2px;
+  animation: fadeIn 1.2s .6s both;
 }
 
 .hero-divider {
@@ -315,10 +363,12 @@ h2 em {
   flex-shrink: 0;
 }
 
-/* COMMON SECTIONS */
+/* =========================================
+   COMMON SECTIONS
+========================================= */
 
 .section {
-  padding: 115px 9%;
+  padding: 110px 9%;
 }
 
 .about-top {
@@ -329,10 +379,20 @@ h2 em {
 
 .gold-line {
   display: block;
+  position: relative;
   height: 1px;
   width: 65px;
   background: var(--gold);
   margin: 27px auto;
+  overflow: hidden;
+}
+
+.gold-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, white, transparent);
+  animation: lineShimmer 4s ease-in-out infinite;
 }
 
 .about-top h2,
@@ -367,37 +427,139 @@ h2 em {
   line-height: 1.9;
 }
 
-/* ABOUT IMAGE */
-
 .about-image {
-  background: transparent;
-  border: none;
+  min-width: 0;
+  min-height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background: transparent;
 }
 
 .about-image img {
   width: 100%;
-  height: 100%;
+  max-height: 440px;
   object-fit: contain;
-  object-position: center;
-  mix-blend-mode: normal;
-  transition: transform .5s ease;
+  transition: transform .8s var(--ease);
 }
 
 .about-image:hover img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
-/* BUSINESS CARDS */
+/* =========================================
+   ABOUT KBK GROUP
+========================================= */
+
+.kbk-about-details {
+  margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.kbk-about-heading {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.kbk-about-heading h3,
+.kbk-about-vision h3 {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.3vw, 42px);
+  font-weight: 400;
+  line-height: 1.35;
+  margin: .8rem 0 0;
+}
+
+.kbk-about-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.kbk-about-card {
+  min-width: 0;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .025);
+  transition:
+    transform .4s var(--ease),
+    border-color .4s ease,
+    background .4s ease;
+}
+
+.kbk-about-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 164, 92, .7);
+  background: rgba(255, 255, 255, .045);
+}
+
+.card-label {
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 1.7px;
+  line-height: 1.8;
+}
+
+.kbk-about-card h4,
+.kbk-value h4 {
+  margin: .8rem 0;
+  font-family: var(--serif);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.kbk-about-card p,
+.kbk-about-vision p,
+.kbk-value p,
+.kbk-about-closing p {
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.kbk-about-vision {
+  margin-top: 1.5rem;
+  padding: clamp(1.6rem, 4vw, 3rem);
+  background: rgba(201, 164, 92, .07);
+  border-left: 2px solid var(--gold);
+}
+
+.kbk-about-vision h3 {
+  margin-bottom: 1rem;
+}
+
+.kbk-about-vision p:last-child {
+  max-width: 800px;
+}
+
+.kbk-about-closing {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.7rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.kbk-about-closing p {
+  max-width: 850px;
+  margin: 0 auto 1.3rem;
+  font-family: var(--serif);
+  font-size: clamp(23px, 2.5vw, 32px);
+  line-height: 1.6;
+  color: var(--ivory);
+}
+
+/* =========================================
+   BUSINESS CARDS
+========================================= */
 
 .businesses {
   background: #0d0d0d;
 }
 
-.section-heading {
+.section-heading,
+.gallery-heading {
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -427,21 +589,21 @@ h2 em {
 .business-card {
   min-width: 0;
   background: var(--black-soft);
-  border: 1px solid rgba(201,164,92,.22);
+  border: 1px solid rgba(201, 164, 92, .22);
   transition:
-    transform .45s ease,
+    transform .45s var(--ease),
     border-color .4s ease,
     box-shadow .4s ease;
 }
 
 .business-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(201,164,92,.65);
-  box-shadow: 0 22px 55px rgba(0,0,0,.25);
+  transform: translateY(-7px);
+  border-color: rgba(201, 164, 92, .7);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .3);
 }
 
 .business-image {
-  height: 350px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,24 +613,19 @@ h2 em {
 }
 
 .business-image img {
-  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
+  transition: transform .8s var(--ease);
 }
 
 .business-image img.diet-logo {
-  width: 100%;
-  height: 100%;
   object-fit: contain;
 }
 
-.business-image .image-number {
-  position: absolute;
-  right: 14px;
-  bottom: 12px;
-  z-index: 2;
+.business-card:hover .business-image img {
+  transform: scale(1.045);
 }
 
 .image-number {
@@ -482,13 +639,6 @@ h2 em {
 
 .business-content {
   padding: 32px;
-}
-
-.card-label {
-  color: var(--gold);
-  font-size: 12px;
-  letter-spacing: 1.7px;
-  line-height: 1.8;
 }
 
 .business-content h3 {
@@ -518,7 +668,9 @@ h2 em {
   letter-spacing: 2px;
 }
 
-/* APARTMENT FEATURE */
+/* =========================================
+   APARTMENT FEATURE
+========================================= */
 
 .apartment-feature {
   display: grid;
@@ -527,6 +679,7 @@ h2 em {
 }
 
 .apartment-feature-image {
+  min-width: 0;
   min-height: 540px;
   overflow: hidden;
 }
@@ -536,11 +689,11 @@ h2 em {
   height: 100%;
   min-height: 540px;
   object-fit: cover;
-  transition: transform 1.2s ease;
+  transition: transform 1.1s var(--ease);
 }
 
 .apartment-feature-image:hover img {
-  transform: scale(1.035);
+  transform: scale(1.045);
 }
 
 .apartment-feature-content {
@@ -574,7 +727,8 @@ h2 em {
   margin-bottom: 28px;
 }
 
-.apartment-phone:hover {
+.apartment-phone:hover,
+.contact-phone:hover {
   text-decoration: underline;
 }
 
@@ -584,7 +738,9 @@ h2 em {
   letter-spacing: 2px;
 }
 
-/* LEGACY */
+/* =========================================
+   LEGACY STRIP
+========================================= */
 
 .legacy {
   padding: 80px 10%;
@@ -611,6 +767,11 @@ h2 em {
 .legacy-number {
   color: var(--gold);
   font: 400 clamp(65px, 8vw, 105px)/1.2 var(--serif);
+  transition: text-shadow .4s ease;
+}
+
+.legacy-year:hover .legacy-number {
+  text-shadow: 0 0 35px rgba(201, 164, 92, .25);
 }
 
 .legacy-copy h2 {
@@ -623,18 +784,12 @@ h2 em {
   margin-top: 12px;
 }
 
-/* GALLERY */
+/* =========================================
+   GALLERY
+========================================= */
 
 .gallery-section {
   padding: 105px 6%;
-}
-
-.gallery-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 30px;
-  margin-bottom: 45px;
 }
 
 .gallery-grid {
@@ -648,32 +803,46 @@ h2 em {
   aspect-ratio: 4 / 3;
   width: 100%;
   padding: 0;
-  border: 1px solid rgba(201,164,92,.2);
+  border: 1px solid rgba(201, 164, 92, .2);
   background: #171512;
   overflow: hidden;
   cursor: pointer;
+  position: relative;
+  transition:
+    border-color .35s ease,
+    transform .35s ease,
+    box-shadow .35s ease;
 }
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .7s ease, filter .5s ease;
+  transition: transform .7s var(--ease), filter .5s ease;
+}
+
+.gallery-item:hover,
+.gallery-item:focus-visible {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
 }
 
 .gallery-item:hover img,
 .gallery-item:focus-visible img {
   transform: scale(1.07);
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 
-/* GALLERY LIGHTBOX */
+/* =========================================
+   GALLERY LIGHTBOX
+========================================= */
 
 .gallery-lightbox {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(0,0,0,.96);
+  background: rgba(0, 0, 0, .96);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -681,12 +850,19 @@ h2 em {
   padding: 70px 7%;
   opacity: 0;
   visibility: hidden;
-  transition: opacity .25s ease, visibility .25s ease;
+  pointer-events: none;
+  backdrop-filter: blur(0);
+  transition:
+    opacity .3s ease,
+    visibility .3s ease,
+    backdrop-filter .3s ease;
 }
 
 .gallery-lightbox.open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
 }
 
 .gallery-lightbox > img {
@@ -694,6 +870,7 @@ h2 em {
   max-height: 78vh;
   object-fit: contain;
   border: 1px solid var(--line);
+  animation: imageEnter .3s ease both;
 }
 
 .gallery-close,
@@ -701,7 +878,7 @@ h2 em {
 .gallery-next {
   position: absolute;
   color: var(--gold);
-  background: rgba(15,15,15,.9);
+  background: rgba(15, 15, 15, .9);
   border: 1px solid var(--line);
   width: 48px;
   height: 48px;
@@ -709,7 +886,7 @@ h2 em {
   font-size: 32px;
   display: grid;
   place-items: center;
-  transition: background .2s, color .2s;
+  transition: background .25s ease, color .25s ease;
 }
 
 .gallery-close:hover,
@@ -744,7 +921,9 @@ h2 em {
   letter-spacing: 2px;
 }
 
-/* CONTACT */
+/* =========================================
+   CONTACT
+========================================= */
 
 .contact {
   background: #0d0d0d;
@@ -778,6 +957,16 @@ h2 em {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  transition:
+    transform .4s var(--ease),
+    border-color .4s ease,
+    background .4s ease;
+}
+
+.contact-panel:hover {
+  transform: translateY(-5px);
+  border-color: rgba(201, 164, 92, .65);
+  background: #0c0b09;
 }
 
 .contact-overline {
@@ -808,17 +997,15 @@ h2 em {
   margin: 3px 0 12px;
 }
 
-.contact-phone:hover {
-  text-decoration: underline;
-}
-
 .contact-email {
   color: var(--muted);
   font-size: 15px;
   overflow-wrap: anywhere;
 }
 
-/* FOOTER */
+/* =========================================
+   FOOTER
+========================================= */
 
 .footer {
   padding: 48px 6%;
@@ -828,9 +1015,15 @@ h2 em {
 }
 
 .footer-brand {
+  display: inline-block;
   color: var(--gold);
   font: 400 25px/1.5 var(--serif);
   letter-spacing: 3px;
+  transition: color .3s ease;
+}
+
+.footer-brand:hover {
+  color: var(--gold-light);
 }
 
 .footer > p {
@@ -874,15 +1067,35 @@ h2 em {
   line-height: 1.9;
 }
 
-/* ANIMATIONS */
+/* =========================================
+   SCROLL REVEAL
+   Used by script.js
+========================================= */
+
+.kbk-reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity .8s var(--ease),
+    transform .8s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.kbk-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
 
 @keyframes heroEnter {
   from {
     opacity: 0;
-    transform: translateY(25px);
-    filter: blur(5px);
+    transform: translateY(28px);
+    filter: blur(4px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -890,50 +1103,70 @@ h2 em {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
+@keyframes heroOrb {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(-25px, 22px) rotate(10deg);
   }
 }
 
-/* TABLETS */
+@keyframes lineShimmer {
+  0%, 65% { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
 
-@media (max-width: 1000px) {
+@keyframes imageEnter {
+  from {
+    opacity: 0;
+    transform: scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================
+   TABLETS
+========================================= */
+
+@media (max-width: 1050px) {
   .header {
     padding-inline: 4%;
   }
 
   .brand img {
-    width: 75px;
-    height: 70px;
+    width: 68px;
+    height: 65px;
   }
 
   .brand strong {
-    font-size: 16px;
+    font-size: 15px;
+    letter-spacing: 1.5px;
   }
 
   .brand small {
-    font-size: 10px;
+    font-size: 9px;
+    letter-spacing: 1.4px;
   }
 
   .nav {
-    gap: 13px;
+    gap: 12px;
   }
 
   .nav a {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .section {
-    padding: 90px 6%;
+    padding: 85px 6%;
   }
 
   .business-content {
@@ -949,17 +1182,18 @@ h2 em {
   }
 }
 
-/* MOBILE */
+/* =========================================
+   MOBILE NAVIGATION & LAYOUT
+========================================= */
 
 @media (max-width: 760px) {
   body {
     font-size: 16px;
-    line-height: 1.8;
   }
 
   .header {
     min-height: 75px;
-    padding: 10px 5%;
+    padding: 9px 5%;
   }
 
   .brand {
@@ -973,12 +1207,12 @@ h2 em {
 
   .brand strong {
     font-size: 13px;
-    letter-spacing: 1.4px;
+    letter-spacing: 1.3px;
   }
 
   .brand small {
-    font-size: 9px;
-    letter-spacing: 1.3px;
+    font-size: 8px;
+    letter-spacing: 1px;
   }
 
   .menu-toggle {
@@ -987,49 +1221,70 @@ h2 em {
   }
 
   .nav {
-    display: none;
+    display: flex;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    padding: 18px 6% 24px;
+    padding: 12px 6% 20px;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     background: #0a0a0a;
     border-bottom: 1px solid var(--line);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      opacity .3s ease,
+      transform .3s ease,
+      visibility .3s ease;
   }
 
   .nav.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .nav a {
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(201,164,92,.12);
-    font-size: 16px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(201, 164, 92, .12);
+    font-size: 15px;
+  }
+
+  .nav a::after {
+    display: none;
   }
 
   .hero {
     min-height: 82svh;
-    padding: 85px 7% 125px;
+    padding: 80px 7% 125px;
+  }
+
+  .hero::before {
+    width: 300px;
+    height: 300px;
+    right: -180px;
+    top: 15%;
   }
 
   .eyebrow,
   .section-label {
     font-size: 11px;
-    letter-spacing: 2.2px;
+    letter-spacing: 2px;
   }
 
   .hero h1 {
-    font-size: clamp(42px, 10.5vw, 64px);
-    letter-spacing: -.8px;
-    line-height: 1.18;
+    font-size: clamp(40px, 10vw, 62px);
+    letter-spacing: -.7px;
+    line-height: 1.2;
   }
 
   .hero-description {
-    font-size: 17px;
-    line-height: 1.8;
+    font-size: 16px;
     margin-top: 22px;
   }
 
@@ -1039,64 +1294,74 @@ h2 em {
   }
 
   .button {
-    min-height: 50px;
-    padding: 12px 18px;
+    min-height: 49px;
+    padding: 12px 17px;
     font-size: 14px;
   }
 
   .hero-bottom {
     left: 7%;
     right: 7%;
-    gap: 10px;
+    gap: 9px;
     font-size: 9px;
-    letter-spacing: 1px;
+    letter-spacing: .8px;
   }
 
   .hero-divider {
-    width: 22px;
+    width: 20px;
   }
 
   .section {
-    padding: 76px 6%;
+    padding: 72px 6%;
   }
 
   .about-top {
-    margin-bottom: 43px;
+    margin-bottom: 42px;
   }
 
   .about-top h2,
   .section-heading h2,
   .gallery-heading h2 {
-    font-size: clamp(34px, 8vw, 45px);
+    font-size: clamp(33px, 8vw, 44px);
   }
 
   .about-top > p:last-child {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 25px;
   }
 
   .about-text h3 {
-    font-size: 32px;
+    font-size: 31px;
   }
 
   .about-text p {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .about-image {
-    min-height: 250px;
-    height: 300px;
+    min-height: 220px;
+    max-height: 300px;
+  }
+
+  .kbk-about-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .kbk-about-card p,
+  .kbk-about-vision p {
+    font-size: 16px;
   }
 
   .section-heading,
   .gallery-heading {
     align-items: flex-start;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
   }
 
   .heading-description,
@@ -1107,12 +1372,12 @@ h2 em {
 
   .business-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 24px;
   }
 
   .business-image {
     height: auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 4;
   }
 
   .business-image img.diet-logo {
@@ -1120,15 +1385,11 @@ h2 em {
   }
 
   .business-content {
-    padding: 25px;
-  }
-
-  .card-label {
-    font-size: 11px;
+    padding: 24px;
   }
 
   .business-content h3 {
-    font-size: 29px;
+    font-size: 28px;
   }
 
   .business-content > p:not(.card-label):not(.business-location) {
@@ -1139,10 +1400,6 @@ h2 em {
     font-size: 15px;
   }
 
-  .business-location span {
-    font-size: 11px;
-  }
-
   .apartment-feature {
     grid-template-columns: 1fr;
   }
@@ -1150,11 +1407,12 @@ h2 em {
   .apartment-feature-image,
   .apartment-feature-image img {
     min-height: 0;
-    height: 320px;
+    height: auto;
+    aspect-ratio: 3 / 4;
   }
 
   .apartment-feature-content {
-    padding: 55px 7%;
+    padding: 50px 7%;
   }
 
   .apartment-feature-content h2 {
@@ -1162,7 +1420,7 @@ h2 em {
   }
 
   .apartment-feature-content > p:not(.section-label) {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .apartment-phone {
@@ -1170,22 +1428,19 @@ h2 em {
   }
 
   .location-note {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 1.4px;
   }
 
   .legacy {
-    padding: 55px 7%;
+    padding: 50px 7%;
     flex-direction: column;
     align-items: flex-start;
-    gap: 25px;
-  }
-
-  .legacy-caption {
-    font-size: 11px;
+    gap: 20px;
   }
 
   .legacy-copy h2 {
-    font-size: 32px;
+    font-size: 31px;
   }
 
   .legacy-copy p {
@@ -1193,7 +1448,7 @@ h2 em {
   }
 
   .gallery-section {
-    padding: 76px 5%;
+    padding: 72px 5%;
   }
 
   .gallery-grid {
@@ -1202,7 +1457,7 @@ h2 em {
   }
 
   .gallery-lightbox {
-    padding: 70px 14px;
+    padding: 65px 12px;
   }
 
   .gallery-lightbox > img {
@@ -1210,12 +1465,23 @@ h2 em {
     max-height: 72vh;
   }
 
+  .gallery-close {
+    top: 12px;
+    right: 12px;
+  }
+
   .gallery-prev {
-    left: 8px;
+    left: 6px;
   }
 
   .gallery-next {
-    right: 8px;
+    right: 6px;
+  }
+
+  .gallery-prev,
+  .gallery-next {
+    width: 40px;
+    height: 44px;
   }
 
   .contact-options {
@@ -1224,52 +1490,32 @@ h2 em {
   }
 
   .contact-intro h2 {
-    font-size: 43px;
-  }
-
-  .contact-intro > p:last-child {
-    font-size: 16px;
+    font-size: 42px;
   }
 
   .contact-panel {
-    padding: 27px;
-  }
-
-  .contact-overline {
-    font-size: 11px;
+    padding: 26px;
   }
 
   .contact-panel h3 {
-    font-size: 29px;
+    font-size: 28px;
   }
 
   .contact-location-text {
     font-size: 15px;
   }
 
-  .contact-email {
-    font-size: 14px;
-  }
-
   .footer {
-    padding: 40px 6%;
+    padding: 38px 6%;
   }
 
   .footer-brand {
-    font-size: 23px;
-  }
-
-  .footer > p {
-    font-size: 14px;
+    font-size: 22px;
   }
 
   .footer-locations {
-    margin: 27px auto;
+    margin: 25px auto;
     padding: 22px 8px;
-  }
-
-  .footer-location-heading {
-    font-size: 12px;
   }
 
   .footer-state-name {
@@ -1278,11 +1524,12 @@ h2 em {
 
   .footer-state p:last-child {
     font-size: 15px;
-    line-height: 1.9;
   }
 }
 
-/* SMALL MOBILE */
+/* =========================================
+   SMALL MOBILE
+========================================= */
 
 @media (max-width: 380px) {
   .brand strong {
@@ -1290,7 +1537,7 @@ h2 em {
   }
 
   .brand small {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .hero-buttons {
@@ -1300,171 +1547,211 @@ h2 em {
 
   .hero-bottom {
     font-size: 8px;
-    gap: 7px;
+    gap: 6px;
   }
 
   .gallery-grid {
     gap: 6px;
   }
 
-  .contact-email {
-    font-size: 13px;
+  .contact-panel {
+    padding: 22px;
   }
 }
 
 /* =========================================
-   KBK GROUP — ABOUT SECTION
+   REDUCED MOTION ACCESSIBILITY
 ========================================= */
 
-.kbk-about-details {
-  margin-top: clamp(3rem, 7vw, 6rem);
-}
-
-.kbk-about-heading {
-  max-width: 800px;
-  margin: 0 auto 2rem;
-  text-align: center;
-}
-
-.kbk-about-heading h3,
-.kbk-about-vision h3 {
-  font-family: var(--serif);
-  font-size: clamp(30px, 3.3vw, 42px);
-  font-weight: 400;
-  line-height: 1.35;
-  margin: .8rem 0 0;
-}
-
-.kbk-about-heading h3 em,
-.kbk-about-vision h3 em {
-  font-weight: 400;
-}
-
-.kbk-about-columns {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-
-.kbk-about-card {
-  min-width: 0;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  border: 1px solid rgba(177,143,82,.35);
-  background: rgba(255,255,255,.025);
-}
-
-.kbk-about-card h4,
-.kbk-value h4 {
-  margin: .8rem 0;
-  font-family: var(--serif);
-  font-size: clamp(22px, 2vw, 28px);
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.kbk-about-card p,
-.kbk-about-vision p,
-.kbk-value p,
-.kbk-about-closing p {
-  font-size: 17px;
-  line-height: 1.9;
-  color: var(--muted);
-}
-
-.kbk-about-vision {
-  margin-top: 1.5rem;
-  padding: clamp(1.6rem, 4vw, 3rem);
-  background: rgba(177,143,82,.08);
-  border-left: 2px solid var(--gold);
-}
-
-.kbk-about-vision h3 {
-  max-width: 800px;
-  margin-bottom: 1rem;
-}
-
-.kbk-about-vision p:last-child {
-  max-width: 800px;
-  margin-bottom: 0;
-}
-
-.kbk-values {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-}
-
-.kbk-values-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.kbk-value {
-  min-width: 0;
-  padding: 1.5rem 1.2rem;
-  border-top: 1px solid rgba(177,143,82,.55);
-}
-
-.kbk-value > span {
-  color: var(--gold);
-  font-size: 13px;
-  letter-spacing: .12em;
-}
-
-.kbk-value h4 {
-  margin-top: .7rem;
-}
-
-.kbk-value p {
-  font-size: 16px;
-  margin-bottom: 0;
-}
-
-.kbk-about-closing {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-  padding-top: 1.7rem;
-  border-top: 1px solid rgba(177,143,82,.35);
-  text-align: center;
-}
-
-.kbk-about-closing p {
-  max-width: 850px;
-  margin: 0 auto 1.3rem;
-  font-family: var(--serif);
-  font-size: clamp(23px, 2.5vw, 32px);
-  line-height: 1.6;
-  color: var(--ivory);
-}
-
-.kbk-about-closing span {
-  display: inline-block;
-  color: var(--gold);
-  font-size: 13px;
-  line-height: 1.8;
-  letter-spacing: .12em;
-}
-
-@media (max-width: 760px) {
-  .kbk-about-columns {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .kbk-about-card p,
-  .kbk-about-vision p,
-  .kbk-value p {
-    font-size: 16px;
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
   }
 
-  .kbk-values-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: .6rem;
+  .kbk-reveal {
+    opacity: 1;
+    transform: none;
   }
 
-  .kbk-value {
-    padding: 1rem .75rem;
+/* =========================================
+   KBK — VISIBLE ANIMATION FIX
+========================================= */
+
+/* Hero animation when the page loads */
+.hero-content {
+  animation: kbkHeroEnter 1.2s ease both;
+}
+
+.hero-bottom {
+  animation: kbkFadeIn 1.2s 0.5s both;
+}
+
+@keyframes kbkHeroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(45px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes kbkFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Buttons visibly lift on hover */
+.button {
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    background-color .35s ease,
+    color .35s ease !important;
+}
+
+.button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(201, 164, 92, .25);
+}
+
+/* Business cards lift */
+.business-card,
+.kbk-about-card,
+.contact-panel {
+  transition:
+    transform .45s ease,
+    border-color .45s ease,
+    box-shadow .45s ease !important;
+}
+
+.business-card:hover,
+.kbk-about-card:hover,
+.contact-panel:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold);
+  box-shadow: 0 20px 45px rgba(201, 164, 92, .12);
+}
+
+/* Images zoom smoothly */
+.gallery-item img,
+.business-image img,
+.apartment-feature-image img {
+  transition: transform .8s cubic-bezier(.2, .7, .2, 1),
+              filter .6s ease !important;
+}
+
+.gallery-item:hover img,
+.business-card:hover .business-image img,
+.apartment-feature-image:hover img {
+  transform: scale(1.07);
+  filter: brightness(1.08);
+}
+
+/* Scroll reveal — controlled by script.js */
+.kbk-reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+
+.kbk-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Navigation transitions */
+.nav a {
+  transition: color .3s ease, transform .3s ease;
+}
+
+.nav a:hover {
+  transform: translateY(-2px);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 
-  .kbk-about-closing p {
-    font-size: 23px;
+  .kbk-reveal {
+    opacity: 1;
+    transform: none;
   }
+}
+
+/* ===== KBK SCROLL ANIMATIONS ===== */
+
+.kbk-reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+.kbk-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Different entrance directions */
+.kbk-reveal-left {
+  opacity: 0;
+  transform: translateX(-35px);
+}
+
+.kbk-reveal-right {
+  opacity: 0;
+  transform: translateX(35px);
+}
+
+.kbk-reveal-left.is-visible,
+.kbk-reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered card animations */
+.kbk-delay-1 { transition-delay: 0.12s; }
+.kbk-delay-2 { transition-delay: 0.24s; }
+.kbk-delay-3 { transition-delay: 0.36s; }
+
+/* Smooth image hover */
+.gallery-item img,
+.business-card img {
+  transition: transform 0.7s ease;
+}
+
+.gallery-item:hover img,
+.business-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .kbk-reveal,
+  .kbk-reveal-left,
+  .kbk-reveal-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 }
