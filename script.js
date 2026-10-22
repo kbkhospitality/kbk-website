@@ -278,4 +278,96 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   }
 
+/* =========================================
+   KBK GALLERY LIGHTBOX — FIX
+========================================= */
+(() => {
+  const grid = document.querySelector(".gallery-grid");
+  const lightbox = document.getElementById("galleryLightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  const closeButton = document.querySelector(".gallery-close");
+  const prevButton = document.querySelector(".gallery-prev");
+  const nextButton = document.querySelector(".gallery-next");
+  const counter = document.getElementById("galleryCounter");
+
+  if (!grid || !lightbox || !lightboxImage) {
+    console.error("Gallery setup error: required HTML elements are missing.");
+    return;
+  }
+
+  const items = Array.from(grid.querySelectorAll(".gallery-item"));
+  let currentIndex = 0;
+
+  function showImage(index) {
+    if (!items.length) return;
+
+    currentIndex = (index + items.length) % items.length;
+
+    const thumbnail = items[currentIndex].querySelector("img");
+    if (!thumbnail) return;
+
+    lightboxImage.src = thumbnail.currentSrc || thumbnail.src;
+    lightboxImage.alt = thumbnail.alt || "Gallery photo";
+    if (counter) {
+      counter.textContent = `${currentIndex + 1} / ${items.length}`;
+    }
+  }
+
+  function openGallery(index) {
+    showImage(index);
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    if (closeButton) closeButton.focus();
+  }
+
+  function closeGallery() {
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // Open the clicked thumbnail.
+  grid.addEventListener("click", (event) => {
+    const button = event.target.closest(".gallery-item");
+    if (!button || !grid.contains(button)) return;
+
+    const index = items.indexOf(button);
+    if (index !== -1) openGallery(index);
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener("click", closeGallery);
+  }
+
+  if (prevButton) {
+    prevButton.addEventListener("click", () => {
+      showImage(currentIndex - 1);
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      showImage(currentIndex + 1);
+    });
+  }
+
+  // Clicking the dark background closes the gallery.
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) closeGallery();
+  });
+
+  // Keyboard controls.
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox.classList.contains("open")) return;
+
+    if (event.key === "Escape") closeGallery();
+    if (event.key === "ArrowLeft") showImage(currentIndex - 1);
+    if (event.key === "ArrowRight") showImage(currentIndex + 1);
+  });
+
+  console.log(`KBK gallery ready: ${items.length} photos found.`);
+})();
+
+
 });
