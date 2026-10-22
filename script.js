@@ -1,211 +1,281 @@
 
-/* =====================================
-   KBK HOSPITALITY — WEBSITE INTERACTIONS
-===================================== */
+/* ==========================================
+   KBK HOSPITALITY
+   Scroll animations, navigation & gallery
+   ========================================== */
 
-// MOBILE NAVIGATION
-const menuToggle = document.querySelector(".menu-toggle");
-const nav = document.querySelector(".nav");
+document.addEventListener("DOMContentLoaded", () => {
 
-if (menuToggle && nav) {
-  menuToggle.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("open");
+  /* 1. FOOTER YEAR */
 
-    menuToggle.textContent = isOpen ? "✕" : "☰";
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.setAttribute(
-      "aria-label",
-      isOpen ? "Close navigation" : "Open navigation"
-    );
+  const year = document.getElementById("year");
+
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+
+
+  /* 2. STICKY HEADER */
+
+  const header = document.querySelector(".header");
+
+  const updateHeader = () => {
+    if (header) {
+      header.classList.toggle("is-scrolled", window.scrollY > 30);
+    }
+  };
+
+  updateHeader();
+
+  window.addEventListener("scroll", updateHeader, {
+    passive: true
   });
 
-  nav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("open");
-      menuToggle.textContent = "☰";
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open navigation");
+
+  /* 3. MOBILE NAVIGATION */
+
+  const menuToggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".nav");
+
+  function closeMenu() {
+    if (!menuToggle || !nav) return;
+
+    nav.classList.remove("open");
+    menuToggle.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+
+      menuToggle.classList.toggle("active", open);
+      menuToggle.setAttribute("aria-expanded", String(open));
     });
-  });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      nav.classList.remove("open");
-      menuToggle.textContent = "☰";
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open navigation");
-    }
-  });
-}
+    nav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", closeMenu);
+    });
 
-// AUTOMATIC FOOTER YEAR
-const yearElement = document.getElementById("year");
+    document.addEventListener("click", event => {
+      if (
+        nav.classList.contains("open") &&
+        !nav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) {
+        closeMenu();
+      }
+    });
 
-if (yearElement) {
-  yearElement.textContent = new Date().getFullYear();
-}
-
-// GALLERY ELEMENTS
-const galleryItems = Array.from(
-  document.querySelectorAll(".gallery-item")
-);
-
-const lightbox = document.getElementById("galleryLightbox");
-const lightboxImage = document.getElementById("lightboxImage");
-const galleryCounter = document.getElementById("galleryCounter");
-
-const closeGalleryButton = document.querySelector(".gallery-close");
-const previousPhotoButton = document.querySelector(".gallery-prev");
-const nextPhotoButton = document.querySelector(".gallery-next");
-
-let currentPhotoIndex = 0;
-let lastFocusedElement = null;
-let touchStartX = 0;
-let touchStartY = 0;
-
-// DISPLAY A SELECTED PHOTO
-function showGalleryPhoto(index) {
-  if (!galleryItems.length || !lightboxImage || !galleryCounter) {
-    return;
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) closeMenu();
+    });
   }
 
-  currentPhotoIndex =
-    (index + galleryItems.length) % galleryItems.length;
 
-  const thumbnail =
-    galleryItems[currentPhotoIndex].querySelector("img");
+  /* 4. SCROLL-TRIGGERED ANIMATIONS */
 
-  if (!thumbnail) return;
+  const revealSelectors = [
+    ".about-top",
+    ".about-grid",
+    ".kbk-about-heading",
+    ".kbk-about-card",
+    ".kbk-about-vision",
+    ".kbk-about-closing",
+    ".section-heading",
+    ".business-card",
+    ".apartment-feature-image",
+    ".apartment-feature-content",
+    ".legacy-year",
+    ".legacy-copy",
+    ".gallery-heading",
+    ".gallery-item",
+    ".contact-intro",
+    ".contact-panel"
+  ];
 
-  lightboxImage.src = thumbnail.currentSrc || thumbnail.src;
-  lightboxImage.alt = thumbnail.alt || "KBK Luxury Apartments photo";
+  const revealElements = [
+    ...new Set(
+      revealSelectors.flatMap(selector =>
+        Array.from(document.querySelectorAll(selector))
+      )
+    )
+  ];
 
-  galleryCounter.textContent =
-    `${currentPhotoIndex + 1} / ${galleryItems.length}`;
-}
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-// OPEN GALLERY
-function openGallery(index) {
-  if (!lightbox || !galleryItems.length) return;
-
-  lastFocusedElement = document.activeElement;
-
-  showGalleryPhoto(index);
-
-  lightbox.classList.add("open");
-  lightbox.setAttribute("aria-hidden", "false");
-  document.body.classList.add("gallery-open");
-
-  if (closeGalleryButton) {
-    closeGalleryButton.focus();
-  }
-}
-
-// CLOSE GALLERY
-function closeGalleryViewer() {
-  if (!lightbox) return;
-
-  lightbox.classList.remove("open");
-  lightbox.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("gallery-open");
-
-  if (lastFocusedElement && lastFocusedElement.focus) {
-    lastFocusedElement.focus();
-  }
-}
-
-// NEXT AND PREVIOUS
-function showPreviousPhoto() {
-  showGalleryPhoto(currentPhotoIndex - 1);
-}
-
-function showNextPhoto() {
-  showGalleryPhoto(currentPhotoIndex + 1);
-}
-
-// CONNECT GALLERY THUMBNAILS
-galleryItems.forEach((item, index) => {
-  item.addEventListener("click", () => {
-    openGallery(index);
-  });
-});
-
-// CONNECT GALLERY BUTTONS
-if (previousPhotoButton) {
-  previousPhotoButton.addEventListener("click", showPreviousPhoto);
-}
-
-if (nextPhotoButton) {
-  nextPhotoButton.addEventListener("click", showNextPhoto);
-}
-
-if (closeGalleryButton) {
-  closeGalleryButton.addEventListener("click", closeGalleryViewer);
-}
-
-// CLOSE WHEN CLICKING OUTSIDE THE PHOTO
-if (lightbox) {
-  lightbox.addEventListener("click", (event) => {
-    if (event.target === lightbox) {
-      closeGalleryViewer();
-    }
-  });
-}
-
-// KEYBOARD SUPPORT
-document.addEventListener("keydown", (event) => {
-  if (!lightbox || !lightbox.classList.contains("open")) return;
-
-  if (event.key === "Escape") {
-    closeGalleryViewer();
+  function showAllElements() {
+    revealElements.forEach(element => {
+      element.classList.add("kbk-reveal", "is-visible");
+    });
   }
 
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    showNextPhoto();
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    showAllElements();
+  } else {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: "0px 0px -30px 0px"
+    });
+
+    revealElements.forEach((element, index) => {
+      element.classList.add("kbk-reveal");
+
+      // Cards enter one after another.
+      if (
+        element.matches(".gallery-item, .business-card, .kbk-about-card")
+      ) {
+        element.style.setProperty(
+          "--reveal-delay",
+          `${(index % 4) * 120}ms`
+        );
+      }
+
+      observer.observe(element);
+    });
   }
 
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    showPreviousPhoto();
-  }
-});
 
-// SWIPE SUPPORT ON MOBILE
-if (lightbox) {
-  lightbox.addEventListener(
-    "touchstart",
-    (event) => {
-      if (!event.touches.length) return;
+  /* 5. GALLERY LIGHTBOX */
 
-      touchStartX = event.touches[0].clientX;
-      touchStartY = event.touches[0].clientY;
-    },
-    { passive: true }
+  const lightbox = document.getElementById("galleryLightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  const counter = document.getElementById("galleryCounter");
+
+  const galleryItems = Array.from(
+    document.querySelectorAll(".gallery-item")
   );
 
-  lightbox.addEventListener(
-    "touchend",
-    (event) => {
-      if (!event.changedTouches.length) return;
+  const closeButton = document.querySelector(".gallery-close");
+  const previousButton = document.querySelector(".gallery-prev");
+  const nextButton = document.querySelector(".gallery-next");
 
-      const differenceX =
+  let currentIndex = 0;
+  let previousFocus = null;
+
+  function displayImage(index) {
+    if (!galleryItems.length || !lightboxImage) return;
+
+    currentIndex =
+      (index + galleryItems.length) % galleryItems.length;
+
+    const image = galleryItems[currentIndex].querySelector("img");
+
+    if (!image) return;
+
+    lightboxImage.src = image.currentSrc || image.src;
+    lightboxImage.alt = image.alt || "KBK Luxury Apartments";
+
+    if (counter) {
+      counter.textContent =
+        `${currentIndex + 1} / ${galleryItems.length}`;
+    }
+  }
+
+  function openLightbox(index) {
+    if (!lightbox || !lightboxImage) return;
+
+    previousFocus = document.activeElement;
+
+    displayImage(index);
+
+    // Your CSS expects "open", not "active".
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("gallery-open");
+
+    if (closeButton) closeButton.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("gallery-open");
+
+    if (previousFocus && typeof previousFocus.focus === "function") {
+      previousFocus.focus();
+    }
+  }
+
+  galleryItems.forEach((item, index) => {
+    item.addEventListener("click", () => openLightbox(index));
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener("click", closeLightbox);
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      displayImage(currentIndex + 1);
+    });
+  }
+
+  if (previousButton) {
+    previousButton.addEventListener("click", () => {
+      displayImage(currentIndex - 1);
+    });
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", event => {
+    if (!lightbox || !lightbox.classList.contains("open")) return;
+
+    if (event.key === "Escape") closeLightbox();
+
+    if (event.key === "ArrowRight") {
+      displayImage(currentIndex + 1);
+    }
+
+    if (event.key === "ArrowLeft") {
+      displayImage(currentIndex - 1);
+    }
+  });
+
+
+  /* 6. SWIPE THROUGH GALLERY ON MOBILE */
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  if (lightboxImage) {
+    lightboxImage.addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0].clientX;
+      touchStartY = event.changedTouches[0].clientY;
+    }, { passive: true });
+
+    lightboxImage.addEventListener("touchend", event => {
+      const deltaX =
         event.changedTouches[0].clientX - touchStartX;
 
-      const differenceY =
+      const deltaY =
         event.changedTouches[0].clientY - touchStartY;
 
       if (
-        Math.abs(differenceX) > 55 &&
-        Math.abs(differenceX) > Math.abs(differenceY)
+        Math.abs(deltaX) > 50 &&
+        Math.abs(deltaX) > Math.abs(deltaY)
       ) {
-        if (differenceX < 0) {
-          showNextPhoto();
-        } else {
-          showPreviousPhoto();
-        }
+        displayImage(currentIndex + (deltaX < 0 ? 1 : -1));
       }
-    },
-    { passive: true }
-  );
-}
+    }, { passive: true });
+  }
+
+});
